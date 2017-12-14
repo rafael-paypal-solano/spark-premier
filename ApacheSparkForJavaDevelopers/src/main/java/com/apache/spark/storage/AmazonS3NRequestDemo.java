@@ -7,6 +7,7 @@ import org.apache.spark.api.java.JavaRDD;
 import org.apache.spark.api.java.JavaSparkContext;
 
 /*
+ https://aws.amazon.com/s3/pricing/
  https://console.aws.amazon.com/iam/home?#/security_credential
  https://hadoop.apache.org/docs/stable/hadoop-aws/tools/hadoop-aws/index.html#Authentication_properties
  */
@@ -28,7 +29,7 @@ public class AmazonS3NRequestDemo {
 
 		return javaSparkContext.textFile(url);
 	}
-	// https://aws.amazon.com/s3/pricing/
+
 	public static void main(String[] args) {
 		SparkConf conf = new SparkConf().setMaster( "local" ).setAppName("ApacheSparkForJavaDevelopers" );
 		JavaSparkContext javaSparkContext = new JavaSparkContext( conf );
