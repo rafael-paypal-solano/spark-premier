@@ -1,7 +1,6 @@
 package com.apache.spark.format;
 
 import java.io.Serializable;
-import java.util.stream.Stream;
 
 public class Movie implements Serializable {
 
