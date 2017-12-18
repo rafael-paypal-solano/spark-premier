@@ -9,6 +9,7 @@ import org.apache.spark.api.java.JavaPairRDD;
 import org.apache.spark.api.java.JavaSparkContext;
 
 public class CollectAsMapDemo {
+	@SuppressWarnings("resource")
 	public static void main(String args[]) {
 		SparkConf conf = new SparkConf().setMaster( "local" ).setAppName("ApacheSparkForJavaDevelopers" );
 		JavaSparkContext javaSparkContext = new JavaSparkContext( conf );
