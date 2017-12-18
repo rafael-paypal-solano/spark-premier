@@ -9,6 +9,7 @@ import org.apache.spark.api.java.JavaSparkContext;
 import scala.Tuple2;
 
 public class CoGroupDemo {
+	@SuppressWarnings("resource")
 	public static void main(String[] args) {
 		SparkConf conf = new SparkConf().setMaster( "local" ).setAppName("ApacheSparkForJavaDevelopers" );
 		JavaSparkContext javaSparkContext = new JavaSparkContext( conf );				
