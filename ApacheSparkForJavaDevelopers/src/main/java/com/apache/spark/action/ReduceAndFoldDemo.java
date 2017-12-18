@@ -1,4 +1,4 @@
-package com.apache.spark.transformation;
+package com.apache.spark.action;
 
 import java.util.Arrays;
 
