@@ -1,0 +1,13 @@
+(firstName "Rafael" lastName "Solano" weight 175 height 1.85
+	kids (
+		(name "Maria Isabel" dateOfBirth "20090921")
+		(name "Samuel Raul" dateOfBirth "20170604")
+	)
+)
+(firstName "Francisco" lastName "Solano" weight 170 height 2.0
+	kids (
+		(name "Liza Raquel" dateOfBirth "20010101")
+		(name "Fafito" dateOfBirth "20080602")
+		(name "Alberto" dateOfBirth "20040705")
+	)
+)
