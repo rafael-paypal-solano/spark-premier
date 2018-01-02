@@ -15,7 +15,7 @@ import com.pibicloud.model.DTTHeader;
 
 public class DTTIterator implements Iterator<DTTHeader> {
 	private static Logger logger = Logger.getLogger(DTTIterator.class);	
-	private final static String UNEXPECTED_EOF_MSG="End of file reached.";
+	private final static String UNEXPECTED_EOF_MSG="Unexpected end of file.";
 	private final static String END_OF_FILE_FLAG="FIN DE LECTURE";
 	private final static Pattern PATTERN1 = Pattern.compile("^\\/\\d{2}-\\d{2}-\\d{4}\\s+\\d{2}:\\d{2}.+");
 	private final static Pattern PATTERN2 = Pattern.compile(
@@ -32,12 +32,13 @@ public class DTTIterator implements Iterator<DTTHeader> {
 	BufferedReader reader;
 	DTTIteratorState state;
 	DTTHeader lastRecord;
+	DTTHeader currentRecord;
 	String lastLine;
 	
 	public DTTIterator(InputStream input) throws IOException {
 		reader = new BufferedReader(new InputStreamReader(input));
 		state = DTTIteratorState.LOOKING_FOR_SALE_RECORDS;
-		forward();		
+		forward(true);		
 	}
 	
 	private void moveToSalesRecordsSection() throws IOException {
@@ -61,53 +62,65 @@ public class DTTIterator implements Iterator<DTTHeader> {
 	 
 	}
 	
-	private void readSaleRecord() throws IOException {
+	private void readSaleRecord(boolean firstRecord) throws IOException {
 		String line;
-		
+		currentRecord = lastRecord;
 		lastRecord = null;
+		
+		while((line = reader.readLine()) != null && PATTERN1.matcher(line).matches());
+
+		if(line == null)
+			throw new IOException(UNEXPECTED_EOF_MSG);
 		
 		while(
 			(line = reader.readLine()) != null && 
 			(line = line.trim()).length() == 0 && 
-			PATTERN1.matcher(line).matches()
-		); //skips empty and nonrelevant lines
+			(line.startsWith(END_OF_FILE_FLAG) ||
+			 PATTERN1.matcher(line).matches())
+		); 
+		
+		if(line == null)
+			throw new IOException(UNEXPECTED_EOF_MSG);
+				
+		if(line.startsWith(END_OF_FILE_FLAG)) {
+ 			state = DTTIteratorState.END_OF_FILE;
+ 			return;
+ 		}
+		
 		
  		ArrayList<DTTDetail> details= new ArrayList<DTTDetail>();
  		while(
 			(line = reader.readLine()) != null && 
 			line.length() > 0 &&
-			!line.startsWith("FIN DE LECTURE") &&
+			!line.startsWith(END_OF_FILE_FLAG) &&
 			!PATTERN2.matcher(line).matches()
 		) {
 			details.add(new DTTDetail(line.charAt(0), line));
  		}
 
-		if(line == null)
-			throw new IOException("Unexpected end of file");
- 		
-		if(line.startsWith(END_OF_FILE_FLAG)) {
- 			state = DTTIteratorState.END_OF_FILE;
- 			return;
- 		}
- 		
 		lastRecord = new DTTHeader(line, details);
+		
+		if(firstRecord)
+			currentRecord = lastRecord;
+		
 	}
 	
-	protected void forward() throws IOException {
+	protected void forward(boolean firstRecord) throws IOException {
 		DTTIteratorState currentState = state;
 		
 		switch(currentState) {
 			case LOOKING_FOR_SALE_RECORDS:
 				moveToSalesRecordsSection();
 				if(state == DTTIteratorState.IN_SALES_RECORDS_SECTION)
-					readSaleRecord();
+					readSaleRecord(firstRecord);
 				break;
 				
 			case IN_SALES_RECORDS_SECTION:
-				readSaleRecord();
+				readSaleRecord(firstRecord);
 				break;
 				
 			case END_OF_FILE:
+			default:
 				throw new IOException(UNEXPECTED_EOF_MSG);				
 		}
 	}
@@ -124,7 +137,7 @@ public class DTTIterator implements Iterator<DTTHeader> {
 	public DTTHeader next() {
 		DTTHeader record = lastRecord;
 		try {
-			readSaleRecord();
+			forward(false);
 		} catch (Exception e) {
 			logger.error(e.getMessage(), e);
 			throw new NoSuchElementException(e.getMessage());
