@@ -7,6 +7,7 @@ import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.NoSuchElementException;
+import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import org.apache.log4j.Logger;
 
@@ -15,11 +16,11 @@ import com.pibicloud.model.DTTHeader;
 
 public class DTTIterator implements Iterator<DTTHeader> {
 	private static Logger logger = Logger.getLogger(DTTIterator.class);	
-	private final static String UNEXPECTED_EOF_MSG="Unexpected end of file.";
-	private final static String END_OF_FILE_FLAG="FIN DE LECTURE";
-	private final static Pattern PATTERN1 = Pattern.compile("^\\/\\d{2}-\\d{2}-\\d{4}\\s+\\d{2}:\\d{2}.+");
-	private final static Pattern PATTERN2 = Pattern.compile(
-			"\\s+<(\\d{2}-\\d{2}-\\d{2} \\d{2}:\\d{2})" // date time
+	public final static String UNEXPECTED_EOF_MSG="Unexpected end of file.";
+	public final static String END_OF_FILE_FLAG="FIN DE LECTURE";
+	public final static Pattern PATTERN1 = Pattern.compile("^\\/\\d{2}-\\d{2}-\\d{4}\\s+\\d{2}:\\d{2}.+");
+	public  final static Pattern PATTERN2 = Pattern.compile(
+			"\\s*<(\\d{2}-\\d{2}-\\d{2} \\d{2}:\\d{2})" // date time
 			+ "(\\d{6})" // billid
 			+ "/(.{1})" //bill edition
 			+ "(.{11})" //price
@@ -29,13 +30,12 @@ public class DTTIterator implements Iterator<DTTHeader> {
 			+ "(.{5})" // 3 chars for number of operations on the table/room and 2 chars for number of the handy
 			+ ".+");
 	
-	BufferedReader reader;
+	BufferedReader reader; 
 	DTTIteratorState state;
-	DTTHeader lastRecord;
+	DTTHeader lastRecord; 
 	DTTHeader currentRecord;
 	String lastLine;
-	
-	public DTTIterator(InputStream input) throws IOException {
+		public DTTIterator(InputStream input) throws IOException {
 		reader = new BufferedReader(new InputStreamReader(input));
 		state = DTTIteratorState.LOOKING_FOR_SALE_RECORDS;
 		forward(true);		
@@ -64,6 +64,8 @@ public class DTTIterator implements Iterator<DTTHeader> {
 	
 	private void readSaleRecord(boolean firstRecord) throws IOException {
 		String line;
+		Matcher matcher;
+		
 		currentRecord = lastRecord;
 		lastRecord = null;
 		
@@ -98,10 +100,22 @@ public class DTTIterator implements Iterator<DTTHeader> {
 			details.add(new DTTDetail(line.charAt(0), line));
  		}
 
-		lastRecord = new DTTHeader(line, details);
-		
-		if(firstRecord)
-			currentRecord = lastRecord;
+ 		
+ 		if(
+ 			line != null
+ 		) {
+ 			matcher = PATTERN2.matcher(line);
+ 			
+ 			if(matcher.matches()) {
+ 				lastRecord = new DTTHeader(matcher, line, details);
+ 				
+ 				if(firstRecord)
+ 					currentRecord = lastRecord;
+ 			} else {
+ 				throw new IOException(String.format("'%s' doesn't match %s", line, PATTERN2.toString()));
+ 			}
+ 		}
+ 		
 		
 	}
 	
