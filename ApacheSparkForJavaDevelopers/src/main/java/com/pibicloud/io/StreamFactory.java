@@ -27,7 +27,8 @@ public class StreamFactory {
 	
 	public static boolean isBill(DTTHeader header) {
 		
-		if(header == null || header.getDTTDetails() == null || header.getDTTDetails().size()  == 0)
+		if(header == null || header.getDTTDetails() == null || header.getDTTDetails().size()  == 0 ||
+			Parsers.parseDouble(header.getMatcher().group(4).trim()) == 0.0)
 			return false;
 		
 		List<DTTDetail> details = header.getDTTDetails();
@@ -36,19 +37,23 @@ public class StreamFactory {
 	}
 	
 	
-	private static ParsedBill createBill(DTTHeader header) { 
-		ParsedBill bill = Parsers.parseBill(header); 
+	private static Bill createBill(DTTHeader header) { 
+		Bill bill = Parsers.parseBill(header); 
 		List<DTTDetail> dTTDetails = header.getDTTDetails();
 		List<BillItem> items = new LinkedList<BillItem>();
+		int line = 0;
+		
 		
 		for(DTTDetail detail: dTTDetails) {			
 			char flag = detail.getFlag();
 			
 			if(flag == 'A' || flag == 'M' || flag == 'J' || flag == 'L') {				
-				ParsedBillItem billItem = Parsers.parseBillItem(detail.getContent());
+				BillItem billItem = Parsers.parseBillItem(detail.getContent());
 				
 				if(billItem != null) {
+					billItem.setLine(line);
 					items.add(billItem); 
+					line++;
 				}
 				
 			}

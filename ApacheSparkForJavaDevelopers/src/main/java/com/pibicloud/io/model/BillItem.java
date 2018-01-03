@@ -9,9 +9,8 @@ public class BillItem implements Entity {
 	int line;
 	double quantity;
 	char status;
-	double total;
-	double discount;
-	double price;
+	Product product;
+	
 	
 	public BillItem() { 
 		
@@ -42,30 +41,16 @@ public class BillItem implements Entity {
 		this.status = status;
 	}
 
-	public double getTotal() {
-		return total;
-	}
 
-	public void setTotal(double total) {
-		this.total = total;
-	}
-
-	public double getDiscount() {
-		return discount;
-	}
-
-	public void setDiscount(double discount) {
-		this.discount = discount;
+	public Product getProduct() {
+		return product;
 	}
 
 
-	public double getPrice() {
-		return price;
+	public void setProduct(Product product) {
+		this.product = product;
 	}
 
 
-	public void setPrice(double price) {
-		this.price = price;
-	}
 	
 }

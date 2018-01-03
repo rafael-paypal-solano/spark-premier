@@ -31,8 +31,7 @@ public class DTTIteratorTest {
 //	@Test
 	public void loadAndDisplayDTTStream() throws IOException {
 		FileInputStream input = new FileInputStream("input/Lulu-DTT-00020014_20171127.DTT");
-		Stream<DTTHeader> stream = StreamFactory.createDTTStream(input);
-		
+		Stream<DTTHeader> stream = StreamFactory.createDTTStream(input);		
 		stream.forEach(header -> logger.debug(String.format("%s", header.getFooter())));
 	}
 	
@@ -40,7 +39,6 @@ public class DTTIteratorTest {
 	public void loadAndDisplayBillStream() throws IOException {
 		FileInputStream input = new FileInputStream("input/Lulu-DTT-00020014_20171127.DTT");
 		Stream<Bill> stream = StreamFactory.createBillStream(input);
-		
 		stream.forEach(
 			bill -> logger.debug(String.format("id=%s, timestamp=%s, total=%12.2f", bill.getBillId(), Parsers.TIMESTAMP_FORMATTER.format(bill.getTimestamp()), bill.getTotal())));
 	}
