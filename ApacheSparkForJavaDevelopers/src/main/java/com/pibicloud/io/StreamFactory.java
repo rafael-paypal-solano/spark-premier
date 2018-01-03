@@ -33,7 +33,7 @@ public class StreamFactory {
 		
 		List<DTTDetail> details = header.getDTTDetails();
 		
-		return details.stream().anyMatch(item -> item.getFlag() == 'X');
+		return details.stream().anyMatch(item -> item.getFlag() == 'R');
 	}
 	
 	
@@ -59,7 +59,7 @@ public class StreamFactory {
 			}
 			
 		}
-		
+		bill.setItems(items);
 		return bill;
 	}
 	
@@ -68,5 +68,6 @@ public class StreamFactory {
 		return dttStream
 				.filter(StreamFactory::isBill)
 				.map(StreamFactory::createBill);
+				
 	}
 }
