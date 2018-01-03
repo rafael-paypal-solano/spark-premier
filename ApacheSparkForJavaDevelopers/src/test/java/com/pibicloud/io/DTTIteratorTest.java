@@ -44,7 +44,7 @@ public class DTTIteratorTest {
 		Map<String, List<Bill>> groupedById = stream.collect(Collectors.groupingBy(bill -> bill.getBillId()));
 		List<Bill> paidBills = groupedById
 				.entrySet()
-				.stream()
+				.parallelStream()
 				.map(entry ->{
 					List<Bill> list = entry.getValue();
 			
