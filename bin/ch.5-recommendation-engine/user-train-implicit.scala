@@ -40,7 +40,7 @@ def getItems() = {
     val ratings = getFeatures()
     val Array(training, test) = ratings.randomSplit(Array(0.8, 0.2))
 
-    val model = ALS.train(
+    val model = ALS.trainImplicit(
         training,
     /* rank:
     This refers to the number of factor s in our ALS Model, that is, the number of hidden features in our low-rank approximation. Generally,
@@ -60,7 +60,12 @@ def getItems() = {
     the components for the user and item matrices if they get too large in magnitude. This is important for numerical stability , and some kind
     of regularization is almost always used.
     */ 
-        0.01
+        0.01,
+    /* α
+     baseline confidence in preference observations 
+    */ 
+       1.0
+
     )
 
     val userFeatures = model.userFeatures.count()
