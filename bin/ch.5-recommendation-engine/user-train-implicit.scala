@@ -1,7 +1,7 @@
 /*
 In this case, we would like to generate recommended items for a given user. This usually
 takes the form of a top-K list, that is, the K items that our model predicts will have the
-highest probability of the user liking htem.
+highest probability of the user liking them.
 
 In this script, we will use explicit rating data without additional user information, item meta data or other information
 related to the user-item interactions. Hence the features we need as input are simply userID, placeID and rating from rating_final.csv
@@ -64,7 +64,7 @@ def getItems() = {
     /* α
      baseline confidence in preference observations 
     */ 
-       1.0
+       1.0  
 
     )
 
