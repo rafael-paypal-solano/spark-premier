@@ -1,2 +1,6 @@
 input
 output
+*.pyc
+src/datasets/BX-CSV-Dump
+src/datasets/hetrec2011-delicious-2k
+src/datasets/ml-latest
