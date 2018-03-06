@@ -1,0 +1,26 @@
+#!/bin/bash
+
+DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
+SOURCE_DIR="`cd "${DIR}/../";pwd`"
+INPUT_DIR="${SOURCE_DIR}/input"
+DATASET_DIRS="http://files.grouplens.org/datasets/hetrec2011/hetrec2011-delicious-2k.zip
+http://files.grouplens.org/datasets/movielens/ml-latest.zip
+http://www2.informatik.uni-freiburg.de/~cziegler/BX/BX-CSV-Dump.zip
+"
+
+for URL in $DATASET_DIRS
+do
+    ZIP_FILE_NAME="${URL##*/}"
+    ZIP_FILE_PATH="${INPUT_DIR}/${ZIP_FILE_NAME}"
+    UNZIPPED_FILE_DIR="${ZIP_FILE_PATH%.*}"
+
+    if [ ! -d ${UNZIPPED_FILE_DIR} ]; then
+        mkdir ${UNZIPPED_FILE_DIR}
+        wget ${URL} -O ${ZIP_FILE_PATH}
+        unzip -o ${ZIP_FILE_PATH} -d ${UNZIPPED_FILE_DIR}  
+        rm -rf ${ZIP_FILE_PATH}
+    fi
+
+
+done
+
