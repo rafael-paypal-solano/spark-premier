@@ -2,7 +2,7 @@
 
 ## Introduction ##
  
- This project contain practice exercise from my Spark training. Most of the exersices where implemented in python (3.6) because bussiness issues (the company I work for is a Python shop).
+ This project contains practice exercises from my Spark training. Most of them where implemented in python (3.6) because bussiness issues (the company I work for is a Python shop).
 
 ## Datasets ##
 

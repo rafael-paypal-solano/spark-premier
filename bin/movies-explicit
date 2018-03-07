@@ -2,4 +2,4 @@
 
 DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 . ${DIR}/set-env
-${PYSPARK_PYTHON}  -c "import recommenders.Movies; recommenders.Movies.explicit($1)"
+${PYSPARK_PYTHON}  -c "from recommenders import Movies; Movies.explicit($1)"
