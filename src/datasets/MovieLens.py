@@ -23,6 +23,5 @@ class MovieLens(object):
         """
 
         spark = SparkEnvironment.instance().spark
-        all = spark.read.option('header', 'true').csv(FILES_DIR + '/ratings.csv')
-        filtered = all.filter(all['userId'] == user_id)
-        return filtered
+        all = spark.read.option('header', 'true').option('inferSchema', 'true').csv(FILES_DIR + '/ratings.csv')        
+        return all

@@ -5,8 +5,8 @@ from pathos.multiprocessing import Pool, cpu_count
 from pyspark.ml.evaluation import RegressionEvaluator
 from pyspark.ml.recommendation import ALS
 
-Penalties = (0.05, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 0.95, 1.0)
-Ranks = tuple([rank for rank in range(10, 21)])
+Penalties = (0.05, 0.1, 0.5, 0.95, 1.0)
+Ranks = (10,15)
 ALSParams = namedtuple('ALSExplicitParams', 'rank, penalty');
 ALSParamSpace = tuple(list(itertools.chain(*[(lambda r : [(lambda p : ALSParams(r, p) )(p) for p in Penalties] )(r) for r in range(10,21)]))) 
 ExplicitStepResult = namedtuple('ExplicitStepResult', 'rmse, model, rank, penalty');
@@ -29,7 +29,5 @@ class GridSearch(object):
 	@classmethod
 	def explicit_recommender(clazz, ratings, user_col, item_col, rating_col):	
 		(training, test) = ratings.randomSplit([0.8, 0.2])
-		pool = Pool(cpu_count())
-		print(user_col, item_col, rating_col)
 		results = tuple(map(lambda p: GridSearch.explicit_step(training, test, user_col, item_col, rating_col, p.rank, p.penalty), ALSParamSpace))
 		#reduce((lambda x, y: x if x.rmse < y.rmse else y), results)
