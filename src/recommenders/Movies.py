@@ -12,7 +12,7 @@ class Movies(object):
 
 
 	@classmethod
-	def explicit(clazz, user_id):        
+	def explicit(clazz):        
 		"""
 			This method creates movie recommenations for a given user.
 
@@ -23,6 +23,6 @@ class Movies(object):
 				recommenders.Recommendation
 		"""
 
-		ratings = MovieLens.ratingsRDD(user_id)
-		GridSearch.explicit_recommender(ratings, "userId", "movieId", "rating")
+		ratings = MovieLens.ratingsRDD()
+		return GridSearch.explicit_recommender(ratings, "userId", "movieId", "rating")
 		

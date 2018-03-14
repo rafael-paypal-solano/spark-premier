@@ -1,9 +1,9 @@
 from collections import namedtuple
 
-Recommendation = namedtuple('Recommendation','user_id, ratings, rmse')
+Recommendation = namedtuple('Recommendation','validator_model, training, test')
 """
-	user_id (int): User id.
-	ratings (pandas.dataframe):
-	rmse (float): Root mean squared errors
+	movalidator_modeldel (org.apache.spark.ml.tuning.CrossValidatorModel): 
+	training (DataFrame): Training dataset
+	test (DataFrame): Test dataset.
 """
 	

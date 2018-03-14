@@ -26,11 +26,11 @@ Apache Spark makes use of a component called netlib-java, which provides a Java 
 
 The two warnings above mean that the first two implementations were not usable, and MLlib is using the Java implementations under the covers. If your program has large data sizes and spends a lot of time in BLAS functions, you may get a significant performance boost by enabling native BLAS.
 
-### Building Spark with netlib-lgpl ###
+### Building Spark with netlib-lgpl and OpenBLAS ###
 
 1. [Install OpenBLAS](https://gist.github.com/dusenberrymw/d24fcefcd245cfacbc60d3b4caccc560).
 2. [Install R](https://www.digitalocean.com/community/tutorials/how-to-install-r-on-ubuntu-16-04-2) and set **R_HOME**="???" in your ~/.bashrc file.
-4. Run R as sudo and install **kinitr** --install.packages('knitr', dependencies = TRUE)--.
+4. Run R as sudo and install **kinitr** and **e1071** packages. --install.packages('knitr', dependencies = TRUE)--.
 3. Download [Spark 2.3](https://www.apache.org/dyn/closer.lua/spark/spark-2.3.0/spark-2.3.0.tgz) and upack it somewhere.
 
 ```
